@@ -144,6 +144,7 @@ namespace JustEnoughVi
             else
             {
                 Editor.InsertAtCaret(text);
+
                 Editor.Caret.Offset--;
             }
             RequestedMode = Mode.Normal;
@@ -173,6 +174,7 @@ namespace JustEnoughVi
             CommandMap.Add("G", new GoToLineCommand(editor));
 
             CommandMap.Add("f", new FindVisualCommand(editor, 0));
+            CommandMap.Add("t", new FindVisualCommand(editor, -1));
             CommandMap.Add("p", new PasteVisualCommand(editor));
 
             // function key remaps
