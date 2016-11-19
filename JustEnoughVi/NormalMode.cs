@@ -16,6 +16,18 @@ namespace JustEnoughVi
         }
     }
 
+    public class Repeat : Command 
+    {
+        public Repeat(TextEditorData editor) : base(editor) { }
+
+        protected override void Run()
+        {
+            if (PreviousCommandInfo.PreviousCommand != null){
+                PreviousCommandInfo.PreviousCommand.RunCommand(PreviousCommandInfo.Count, PreviousCommandInfo.Argument);
+            }
+        }
+    }
+
     public class SaveAllFiles : Command
     {
         public SaveAllFiles(TextEditorData editor) : base(editor) { }
@@ -54,6 +66,11 @@ namespace JustEnoughVi
 
         protected override void Run()
         {
+            //PreviousCommandInfo.PreviousCommand = this;
+            //PreviousCommandInfo.Count = Count;
+            //PreviousCommandInfo.Argument = Argument;
+            UpdatePrevious();
+
             for (int i = 0; i < Count; i++)
                 Editor.Caret.Offset = StringUtils.PreviousWordOffset(Editor.Text, Editor.Caret.Offset);
         }
@@ -155,6 +172,7 @@ namespace JustEnoughVi
 
         protected override void Run()
         {
+            UpdatePrevious();
             // hack for last line, it doesn't actually cut the line though
             if (Editor.Caret.Offset == Editor.Text.Length)
             {
@@ -178,6 +196,7 @@ namespace JustEnoughVi
 
         protected override void Run()
         {
+            UpdatePrevious();
             int offset = Editor.Caret.Offset;
             for (int i = 0; i < Count && offset < Editor.Length; i++)
                 offset = StringUtils.NextWordOffset(Editor.Text, offset);
@@ -193,6 +212,7 @@ namespace JustEnoughVi
 
         protected override void Run()
         {
+            UpdatePrevious();
             int offset = Editor.Caret.Offset;
             for (int i = 0; i < Count && offset < Editor.Length; i++)
                 offset = StringUtils.WordEndOffset(Editor.Text, offset);
@@ -209,6 +229,7 @@ namespace JustEnoughVi
 
         protected override void Run()
         {
+            UpdatePrevious();
             var line = Editor.GetLine(Editor.Caret.Line);
             Editor.SetSelection(Editor.Caret.Offset, line.EndOffset);
             ClipboardActions.Cut(Editor);
@@ -582,6 +603,7 @@ namespace JustEnoughVi
 
         protected override void Run()
         {
+            UpdatePrevious();
             for (int i = 0; i < Count; i++)
                 Editor.Caret.Offset = StringUtils.NextWordOffset(Editor.Text, Editor.Caret.Offset);
         }
@@ -798,6 +820,7 @@ namespace JustEnoughVi
             CommandMap.Add("R", new ReplaceModeCommand(editor));
             CommandMap.Add("*", new SearchForwardCommand(editor));
             CommandMap.Add(":w", new SaveAllFiles(editor));
+            CommandMap.Add(".", new Repeat(editor));
 
             // remaps
             SpecialKeyCommandMap.Add(SpecialKey.Delete, new DeleteCharacterCommand(editor));
