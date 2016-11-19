@@ -78,11 +78,11 @@ namespace JustEnoughVi
         }
     }
 
-    public class FindVisualCommand : Command
+    public class FindSelectionCommand : Command
     {
         readonly int findResultShift;
 
-        public FindVisualCommand(TextEditorData editor, int findResultShift) : base(editor)
+        public FindSelectionCommand(TextEditorData editor, int findResultShift) : base(editor)
         {
             TakeArgument = true;
             this.findResultShift = findResultShift;
@@ -90,7 +90,6 @@ namespace JustEnoughVi
 
         protected override void Run()
         {
-            Console.WriteLine("Running FindVisualCommand");
             var originalCaretPosition = Editor.Caret.Offset;
             for (int i = 0; i < Count; i++)
             {
@@ -106,10 +105,35 @@ namespace JustEnoughVi
         }
     }
 
-    public class PasteVisualCommand : Command
+    public class FindPreviousSelectionCommand : Command
+    {
+        readonly int findResultShift;
+        public FindPreviousSelectionCommand(TextEditorData editor, int findResultShift) : base(editor)
+        {
+            TakeArgument = true;
+            this.findResultShift = findResultShift;
+        }
+
+        protected override void Run()
+        {
+            var originalCaretPosition = Editor.Caret.Offset;
+            for (int i = 0; i < Count; i++)
+            {
+                var offset = StringUtils.FindPreviousInLine(Editor.Text, Editor.Caret.Offset, Argument);
+                if (offset <= 0)
+                    return;
+
+                Editor.Caret.Offset = offset;
+                Editor.SetSelection(offset, originalCaretPosition);
+            }
+            Editor.Caret.Offset += findResultShift;
+        }
+    }
+
+    public class PasteSelectionCommand : Command
     {
 
-        public PasteVisualCommand (TextEditorData editor) : base(editor) { }
+        public PasteSelectionCommand (TextEditorData editor) : base(editor) { }
 
         protected override void Run()
         {
@@ -172,10 +196,11 @@ namespace JustEnoughVi
             CommandMap.Add("e", new WordEndCommand(editor));
             CommandMap.Add("b", new WordBackCommand(editor));
             CommandMap.Add("G", new GoToLineCommand(editor));
-
-            CommandMap.Add("f", new FindVisualCommand(editor, 0));
-            CommandMap.Add("t", new FindVisualCommand(editor, -1));
-            CommandMap.Add("p", new PasteVisualCommand(editor));
+            CommandMap.Add("f", new FindSelectionCommand(editor, 0));
+            CommandMap.Add("t", new FindSelectionCommand(editor, -1));
+            CommandMap.Add("p", new PasteSelectionCommand(editor));
+            CommandMap.Add("F", new FindPreviousSelectionCommand(editor, 0));
+            CommandMap.Add("T", new FindPreviousSelectionCommand(editor, 1));
 
             // function key remaps
             SpecialKeyCommandMap.Add(SpecialKey.Delete, new CutSelectionCommand(editor));
