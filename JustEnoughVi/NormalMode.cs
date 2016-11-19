@@ -1,5 +1,6 @@
 ﻿using System;
 using Mono.TextEditor;
+using MonoDevelop.Ide;
 using MonoDevelop.Ide.Commands;
 using MonoDevelop.Ide.Editor.Extension;
 
@@ -12,6 +13,16 @@ namespace JustEnoughVi
         protected override void Run()
         {
             Motion.FirstColumn(Editor);
+        }
+    }
+
+    public class SaveAllFiles : Command
+    {
+        public SaveAllFiles(TextEditorData editor) : base(editor) { }
+
+        protected override void Run()
+        {
+            IdeApp.Workbench.SaveAll();
         }
     }
 
@@ -786,6 +797,7 @@ namespace JustEnoughVi
             CommandMap.Add("e", new WordEndCommand(editor));
             CommandMap.Add("R", new ReplaceModeCommand(editor));
             CommandMap.Add("*", new SearchForwardCommand(editor));
+            CommandMap.Add(":w", new SaveAllFiles(editor));
 
             // remaps
             SpecialKeyCommandMap.Add(SpecialKey.Delete, new DeleteCharacterCommand(editor));
