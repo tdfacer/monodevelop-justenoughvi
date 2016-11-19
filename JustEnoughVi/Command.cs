@@ -8,11 +8,11 @@ namespace JustEnoughVi
         public static Command PreviousCommand { get; set; }
         public static int Count { get; set; }
         public static char Argument { get; set; }
+        public static string Text { get; set; }
     }
 
     public abstract class Command
     {
-        //public static Command PreviousCommand { get; set; }
         public bool TakeArgument { get; protected set; }
         public int MinCount { get; protected set; }
         protected Mode RequestedMode { private get; set; }
@@ -54,15 +54,12 @@ namespace JustEnoughVi
             return MonoDevelop.Ide.IdeApp.CommandService.DispatchCommand(command);
         }
 
-        //void UpdatePrevious(Command current, int count, char arg)
-        protected void UpdatePrevious()
+        protected void UpdatePrevious(string text = null)
         {
-            //PreviousCommandInfo.PreviousCommand = current;
-            //PreviousCommandInfo.Count = count;
-            //PreviousCommandInfo.Argument = arg;
             PreviousCommandInfo.PreviousCommand = this;
             PreviousCommandInfo.Count = Count;
             PreviousCommandInfo.Argument = Argument;
+            PreviousCommandInfo.Text = text;
         }
 
     }
