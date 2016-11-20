@@ -45,7 +45,6 @@ namespace JustEnoughVi
 
         protected override void Run()
         {
-            UpdatePrevious();
             CaretMoveActions.Right(Editor);
             RequestedMode = Mode.Insert;
         }
@@ -57,7 +56,6 @@ namespace JustEnoughVi
 
         protected override void Run()
         {
-            UpdatePrevious();
             Motion.LineEnd(Editor);
             RequestedMode = Mode.Insert;
         }
@@ -69,8 +67,6 @@ namespace JustEnoughVi
 
         protected override void Run()
         {
-            UpdatePrevious();
-
             for (int i = 0; i < Count; i++)
                 Editor.Caret.Offset = StringUtils.PreviousWordOffset(Editor.Text, Editor.Caret.Offset);
         }
@@ -439,7 +435,6 @@ namespace JustEnoughVi
 
         protected override void Run()
         {
-            UpdatePrevious();
             Dispatch(SearchCommands.FindNext);
         }
     }
@@ -450,7 +445,6 @@ namespace JustEnoughVi
 
         protected override void Run()
         {
-            UpdatePrevious();
             Dispatch(SearchCommands.FindPrevious);
         }
     }
@@ -461,7 +455,6 @@ namespace JustEnoughVi
 
         protected override void Run()
         {
-            UpdatePrevious();
             MiscActions.InsertNewLineAtEnd(Editor);
             RequestedMode = Mode.Insert;
         }
@@ -473,7 +466,6 @@ namespace JustEnoughVi
 
         protected override void Run()
         {
-            UpdatePrevious();
             if (Editor.Caret.Line == DocumentLocation.MinLine)
             {
                 Editor.Caret.Column = 1;
@@ -593,7 +585,6 @@ namespace JustEnoughVi
 
         protected override void Run()
         {
-            UpdatePrevious();
             for (int i = 0; i < Count; i++)
                 MiscActions.Undo(Editor);
 
@@ -617,7 +608,6 @@ namespace JustEnoughVi
 
         protected override void Run()
         {
-            UpdatePrevious();
             RequestedMode = Mode.VisualLine;
         }
     }
@@ -628,7 +618,6 @@ namespace JustEnoughVi
 
         protected override void Run()
         {
-            UpdatePrevious();
             for (int i = 0; i < Count; i++)
                 Editor.Caret.Offset = StringUtils.NextWordOffset(Editor.Text, Editor.Caret.Offset);
         }
@@ -640,7 +629,6 @@ namespace JustEnoughVi
 
         protected override void Run()
         {
-            UpdatePrevious();
             for (int i = 0; i < Count; i++)
                 Editor.Caret.Offset = StringUtils.WordEndOffset(Editor.Text, Editor.Caret.Offset);
         }
@@ -689,7 +677,6 @@ namespace JustEnoughVi
 
         protected override void Run()
         {
-            UpdatePrevious();
             Dispatch(SearchCommands.Find);
         }
     }

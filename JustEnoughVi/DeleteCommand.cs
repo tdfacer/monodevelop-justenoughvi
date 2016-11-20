@@ -20,6 +20,7 @@ namespace JustEnoughVi
 
         protected override void Run()
         {
+            UpdatePrevious();
             var range = _selector();
             DeleteRange(range);
         }
