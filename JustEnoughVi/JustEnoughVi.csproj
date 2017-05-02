@@ -4,8 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectTypeGuids>{86F6BF2A-E449-4B3E-813B-9ACC37E5545F};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <ProjectGuid>{848A4BF0-DA46-4ED5-8E6A-D22E23C9B455}</ProjectGuid>
+    <ProjectGuid></ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>JustEnoughVi</RootNamespace>
     <AssemblyName>JustEnoughVi</AssemblyName>

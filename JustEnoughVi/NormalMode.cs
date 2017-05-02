@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using Mono.TextEditor;
+using MonoDevelop.Ide;
 using MonoDevelop.Ide.Commands;
 using MonoDevelop.Ide.Editor.Extension;
 using System.Linq;
@@ -12,7 +13,18 @@ namespace JustEnoughVi
 
         protected override void Run()
         {
+            UpdatePrevious();
             Motion.FirstColumn(Editor);
+        }
+    }
+
+    public class SaveAllFiles : Command
+    {
+        public SaveAllFiles(TextEditorData editor) : base(editor) { }
+
+        protected override void Run()
+        {
+            IdeApp.Workbench.SaveAll();
         }
     }
 
@@ -183,6 +195,7 @@ namespace JustEnoughVi
 
         protected override void Run()
         {
+            UpdatePrevious();
             int offset = Editor.Caret.Offset;
             for (int i = 0; i < Count && offset < Editor.Length; i++)
                 offset = StringUtils.WordEndOffset(Editor.Text, offset);
@@ -199,6 +212,7 @@ namespace JustEnoughVi
 
         protected override void Run()
         {
+            UpdatePrevious();
             var line = Editor.GetLine(Editor.Caret.Line);
             Editor.SetSelection(Editor.Caret.Offset, line.EndOffset);
             ClipboardActions.Cut(Editor);
@@ -217,6 +231,7 @@ namespace JustEnoughVi
 
         protected override void Run()
         {
+            UpdatePrevious();
             for (int i = 0; i < Count; i++)
             {
                 var offset = StringUtils.FindNextInLine(Editor.Text, Editor.Caret.Offset, Argument);
@@ -241,6 +256,7 @@ namespace JustEnoughVi
 
         protected override void Run()
         {
+            UpdatePrevious();
             for (int i = 0; i < Count; i++)
             {
                 var offset = StringUtils.FindPreviousInLine(Editor.Text, Editor.Caret.Offset, Argument);
@@ -260,6 +276,7 @@ namespace JustEnoughVi
 
         protected override void Run()
         {
+            UpdatePrevious();
             Editor.Caret.Line = 1;
             Motion.LineStart(Editor);
         }
@@ -274,6 +291,7 @@ namespace JustEnoughVi
 
         protected override void Run()
         {
+            UpdatePrevious();
             if (Count == 0)
             {
                 CaretMoveActions.ToDocumentEnd(Editor);
@@ -293,6 +311,7 @@ namespace JustEnoughVi
 
         protected override void Run()
         {
+            UpdatePrevious();
             Dispatch("MonoDevelop.Refactoring.RefactoryCommands.GotoDeclaration");
         }
     }
@@ -303,6 +322,7 @@ namespace JustEnoughVi
 
         protected override void Run()
         {
+            UpdatePrevious();
             Dispatch(WindowCommands.NextDocument);
         }
     }
@@ -313,6 +333,7 @@ namespace JustEnoughVi
 
         protected override void Run()
         {
+            UpdatePrevious();
             Dispatch(WindowCommands.PrevDocument);
         }
     }
@@ -343,6 +364,7 @@ namespace JustEnoughVi
 
         protected override void Run()
         {
+            UpdatePrevious();
             Motion.LineStart(Editor);
             RequestedMode = Mode.Insert;
         }
@@ -354,6 +376,7 @@ namespace JustEnoughVi
 
         protected override void Run()
         {
+            UpdatePrevious();
             for (int i = 0; i < Count; i++)
             {
                 CaretMoveActions.LineEnd(Editor);
@@ -376,6 +399,7 @@ namespace JustEnoughVi
 
         protected override void Run()
         {
+            UpdatePrevious();
             var currentWord = TextObject.CurrentWord(Editor);
             Editor.SetSelection(currentWord.Start, currentWord.End);
             Dispatch(SearchCommands.UseSelectionForFind);
@@ -451,6 +475,7 @@ namespace JustEnoughVi
                 return;
 
             string text = clipboard.WaitForText();
+            UpdatePrevious(text);
 
             if (text.IndexOfAny(new char[] { '\r', '\n' }) > 0)
             {
@@ -485,6 +510,7 @@ namespace JustEnoughVi
                 return;
 
             string text = clipboard.WaitForText();
+            UpdatePrevious(text);
 
             if (text.IndexOfAny(new char[] { '\r', '\n' }) > 0)
             {
@@ -523,6 +549,7 @@ namespace JustEnoughVi
 
         protected override void Run()
         {
+            UpdatePrevious();
             if (Char.IsControl(Argument))
                 return;
 
@@ -594,9 +621,25 @@ namespace JustEnoughVi
 
         protected override void Run()
         {
+            UpdatePrevious();
             var count = Math.Min(Math.Max(Count, 1), Editor.GetLine(Editor.Caret.Line).EndOffset - Editor.Caret.Offset);
             Editor.SetSelection(Editor.Caret.Offset, Editor.Caret.Offset + count);
             ClipboardActions.Cut(Editor);
+        }
+    }
+
+    public class ChangeCharacterCommand : Command
+    {
+        public ChangeCharacterCommand(TextEditorData editor) : base(editor) { }
+
+        protected override void Run()
+        {
+            UpdatePrevious();
+            var count = Math.Min(Math.Max(Count, 1), Editor.GetLine(Editor.Caret.Line).EndOffset - Editor.Caret.Offset);
+            Editor.SetSelection(Editor.Caret.Offset, Editor.Caret.Offset + count);
+            ClipboardActions.Cut(Editor);
+
+            RequestedMode = Mode.Insert;
         }
     }
 
@@ -606,6 +649,7 @@ namespace JustEnoughVi
 
         protected override void Run()
         {
+            UpdatePrevious();
             Motion.SetSelectLines(Editor, Editor.Caret.Line, Editor.Caret.Line + Count - 1);
             ClipboardActions.Copy(Editor);
             Editor.ClearSelection();
@@ -618,6 +662,7 @@ namespace JustEnoughVi
 
         protected override void Run()
         {
+            UpdatePrevious();
             Dispatch(TextEditorCommands.RecenterEditor);
         }
     }
@@ -637,6 +682,7 @@ namespace JustEnoughVi
 
         protected override void Run()
         {
+            UpdatePrevious();
             MiscActions.GotoMatchingBracket(Editor);
         }
     }
@@ -650,6 +696,7 @@ namespace JustEnoughVi
 
         protected override void Run()
         {
+            UpdatePrevious();
             Motion.SetSelectLines(Editor, Editor.Caret.Line, Editor.Caret.Line + Count - 1);
             MiscActions.IndentSelection(Editor);
             Editor.ClearSelection();
@@ -662,6 +709,7 @@ namespace JustEnoughVi
 
         protected override void Run()
         {
+            UpdatePrevious();
             Motion.SetSelectLines(Editor, Editor.Caret.Line, Editor.Caret.Line);
             MiscActions.IndentSelection(Editor);
             Editor.ClearSelection();
@@ -677,6 +725,7 @@ namespace JustEnoughVi
 
         protected override void Run()
         {
+            UpdatePrevious();
             Motion.SetSelectLines(Editor, Editor.Caret.Line, Editor.Caret.Line + Count - 1);
             MiscActions.RemoveIndentSelection(Editor);
             Editor.ClearSelection();
@@ -689,6 +738,7 @@ namespace JustEnoughVi
 
         protected override void Run()
         {
+            UpdatePrevious();
             Motion.SetSelectLines(Editor, Editor.Caret.Line, Editor.Caret.Line);
             MiscActions.RemoveIndentSelection(Editor);
             Editor.ClearSelection();
@@ -723,6 +773,7 @@ namespace JustEnoughVi
             CommandMap.Add("A", new AppendEndCommand(editor));
             CommandMap.Add("b", new WordBackCommand(editor));
             CommandMap.Add("cc", new ChangeLineCommand(editor));
+            CommandMap.Add("S", new ChangeLineCommand(editor));
             CommandMap.Add("ci'", new ChangeCommand(editor, TextObject.InnerQuotedString, '\''));
             CommandMap.Add("ci\"", new ChangeCommand(editor, TextObject.InnerQuotedString, '\"'));
             CommandMap.Add("ci(", new ChangeInnerBlock(editor, '(', ')'));
@@ -805,6 +856,8 @@ namespace JustEnoughVi
             CommandMap.Add("e", new WordEndCommand(editor));
             CommandMap.Add("R", new ReplaceModeCommand(editor));
             CommandMap.Add("*", new SearchForwardCommand(editor));
+            CommandMap.Add(":w", new SaveAllFiles(editor));
+            CommandMap.Add("s", new ChangeCharacterCommand(editor));
             CommandMap.Add("~", new SwapCaseCommand(editor));
 
 

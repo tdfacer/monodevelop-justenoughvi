@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Mono.TextEditor;
 using MonoDevelop.Ide.Editor;
 using MonoDevelop.Ide.Editor.Extension;
@@ -176,6 +176,15 @@ namespace JustEnoughVi
 
     }
 
+    public class SelectToFirstLineCommand : GoToLineCommand
+    {
+        SelectToFirstLineCommand(TextEditorData editor) : base(editor)
+        {
+            MinCount = 1;
+        }
+    }
+        
+
     public class VisualMode : ViMode
     {
         private int _startOffset;
@@ -201,6 +210,7 @@ namespace JustEnoughVi
             CommandMap.Add("p", new PasteSelectionCommand(editor));
             CommandMap.Add("F", new FindPreviousSelectionCommand(editor, 0));
             CommandMap.Add("T", new FindPreviousSelectionCommand(editor, 1));
+            CommandMap.Add("gg", new GoToFirstLineCommand(editor));
 
             // function key remaps
             SpecialKeyCommandMap.Add(SpecialKey.Delete, new CutSelectionCommand(editor));
