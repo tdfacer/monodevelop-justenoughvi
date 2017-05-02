@@ -148,6 +148,12 @@ namespace JustEnoughViTests
             Test(source, keys, expected, typeof(NormalMode));
         }
 
+        [TestCase("s$at", "~", "S$at")]
+        public void Swapping(string source, string keys, string expected)
+        {
+            Test(source, keys, expected, typeof(NormalMode));
+        }
+
         [TestCase("N$avigationTests", "Rreplacing", "Replacingn$Tests")]
         public void ReplaceModeTests(string source, string keys, string expected)
         {

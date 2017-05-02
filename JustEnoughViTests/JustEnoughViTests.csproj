@@ -3,7 +3,6 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectTypeGuids></ProjectTypeGuids>
     <ProjectGuid></ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>JustEnoughViTests</RootNamespace>
@@ -21,17 +20,18 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
-    <CustomCommands>
-      <CustomCommands>
-        <Command type="Execute" command="../../monodevelop/main/build/bin/mdtool.exe run-md-tests bin/Debug/JustEnoughViTests.dll" />
-      </CustomCommands>
-    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
     <OutputPath>bin\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Custom Command' ">
+    <StartAction>Program</StartAction>
+    <StartProgram>..\..\monodevelop\main\build\bin\mdtool.exe</StartProgram>
+    <StartArguments>run-md-tests bin/Debug/JustEnoughViTests.dll</StartArguments>
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
@@ -52,7 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\JustEnoughVi\JustEnoughVi.csproj">
-      <Project>{848A4BF0-DA46-4ED5-8E6A-D22E23C9B455}</Project>
+      <Project>{}</Project>
       <Name>JustEnoughVi</Name>
     </ProjectReference>
   </ItemGroup>
